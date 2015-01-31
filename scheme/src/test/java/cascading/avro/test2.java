@@ -13,7 +13,9 @@ public class test2 extends org.apache.avro.specific.SpecificRecordBase implement
   @Deprecated public java.lang.CharSequence outerField;
 
   /**
-   * Default constructor.
+   * Default constructor.  Note that this does not initialize fields
+   * to their default values from the schema.  If that is desired then
+   * one should use <code>newBuilder()</code>. 
    */
   public test2() {}
 
@@ -106,6 +108,14 @@ public class test2 extends org.apache.avro.specific.SpecificRecordBase implement
     /** Creates a Builder by copying an existing Builder */
     private Builder(cascading.avro.test2.Builder other) {
       super(other);
+      if (isValidValue(fields()[0], other.innerRec)) {
+        this.innerRec = data().deepCopy(fields()[0].schema(), other.innerRec);
+        fieldSetFlags()[0] = true;
+      }
+      if (isValidValue(fields()[1], other.outerField)) {
+        this.outerField = data().deepCopy(fields()[1].schema(), other.outerField);
+        fieldSetFlags()[1] = true;
+      }
     }
     
     /** Creates a Builder by copying an existing test2 instance */

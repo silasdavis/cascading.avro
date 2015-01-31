@@ -3,17 +3,19 @@
  * 
  * DO NOT EDIT DIRECTLY
  */
-package com.maxpoint.cascading.avro;  
+package cascading.avro;  
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class test4 extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"test4\",\"namespace\":\"com.maxpoint.cascading.avro\",\"fields\":[{\"name\":\"aListOfListOfInt\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"array\",\"items\":\"int\"}}},{\"name\":\"aListOfMapToLong\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"map\",\"values\":\"long\"}}}]}");
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"test4\",\"namespace\":\"cascading.avro\",\"fields\":[{\"name\":\"aListOfListOfInt\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"array\",\"items\":\"int\"}}},{\"name\":\"aListOfMapToLong\",\"type\":{\"type\":\"array\",\"items\":{\"type\":\"map\",\"values\":\"long\"}}}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
   @Deprecated public java.util.List<java.util.List<java.lang.Integer>> aListOfListOfInt;
   @Deprecated public java.util.List<java.util.Map<java.lang.CharSequence,java.lang.Long>> aListOfMapToLong;
 
   /**
-   * Default constructor.
+   * Default constructor.  Note that this does not initialize fields
+   * to their default values from the schema.  If that is desired then
+   * one should use <code>newBuilder()</code>. 
    */
   public test4() {}
 
@@ -75,18 +77,18 @@ public class test4 extends org.apache.avro.specific.SpecificRecordBase implement
   }
 
   /** Creates a new test4 RecordBuilder */
-  public static com.maxpoint.cascading.avro.test4.Builder newBuilder() {
-    return new com.maxpoint.cascading.avro.test4.Builder();
+  public static cascading.avro.test4.Builder newBuilder() {
+    return new cascading.avro.test4.Builder();
   }
   
   /** Creates a new test4 RecordBuilder by copying an existing Builder */
-  public static com.maxpoint.cascading.avro.test4.Builder newBuilder(com.maxpoint.cascading.avro.test4.Builder other) {
-    return new com.maxpoint.cascading.avro.test4.Builder(other);
+  public static cascading.avro.test4.Builder newBuilder(cascading.avro.test4.Builder other) {
+    return new cascading.avro.test4.Builder(other);
   }
   
   /** Creates a new test4 RecordBuilder by copying an existing test4 instance */
-  public static com.maxpoint.cascading.avro.test4.Builder newBuilder(com.maxpoint.cascading.avro.test4 other) {
-    return new com.maxpoint.cascading.avro.test4.Builder(other);
+  public static cascading.avro.test4.Builder newBuilder(cascading.avro.test4 other) {
+    return new cascading.avro.test4.Builder(other);
   }
   
   /**
@@ -100,17 +102,25 @@ public class test4 extends org.apache.avro.specific.SpecificRecordBase implement
 
     /** Creates a new Builder */
     private Builder() {
-      super(com.maxpoint.cascading.avro.test4.SCHEMA$);
+      super(cascading.avro.test4.SCHEMA$);
     }
     
     /** Creates a Builder by copying an existing Builder */
-    private Builder(com.maxpoint.cascading.avro.test4.Builder other) {
+    private Builder(cascading.avro.test4.Builder other) {
       super(other);
+      if (isValidValue(fields()[0], other.aListOfListOfInt)) {
+        this.aListOfListOfInt = data().deepCopy(fields()[0].schema(), other.aListOfListOfInt);
+        fieldSetFlags()[0] = true;
+      }
+      if (isValidValue(fields()[1], other.aListOfMapToLong)) {
+        this.aListOfMapToLong = data().deepCopy(fields()[1].schema(), other.aListOfMapToLong);
+        fieldSetFlags()[1] = true;
+      }
     }
     
     /** Creates a Builder by copying an existing test4 instance */
-    private Builder(com.maxpoint.cascading.avro.test4 other) {
-            super(com.maxpoint.cascading.avro.test4.SCHEMA$);
+    private Builder(cascading.avro.test4 other) {
+            super(cascading.avro.test4.SCHEMA$);
       if (isValidValue(fields()[0], other.aListOfListOfInt)) {
         this.aListOfListOfInt = data().deepCopy(fields()[0].schema(), other.aListOfListOfInt);
         fieldSetFlags()[0] = true;
@@ -127,7 +137,7 @@ public class test4 extends org.apache.avro.specific.SpecificRecordBase implement
     }
     
     /** Sets the value of the 'aListOfListOfInt' field */
-    public com.maxpoint.cascading.avro.test4.Builder setAListOfListOfInt(java.util.List<java.util.List<java.lang.Integer>> value) {
+    public cascading.avro.test4.Builder setAListOfListOfInt(java.util.List<java.util.List<java.lang.Integer>> value) {
       validate(fields()[0], value);
       this.aListOfListOfInt = value;
       fieldSetFlags()[0] = true;
@@ -140,7 +150,7 @@ public class test4 extends org.apache.avro.specific.SpecificRecordBase implement
     }
     
     /** Clears the value of the 'aListOfListOfInt' field */
-    public com.maxpoint.cascading.avro.test4.Builder clearAListOfListOfInt() {
+    public cascading.avro.test4.Builder clearAListOfListOfInt() {
       aListOfListOfInt = null;
       fieldSetFlags()[0] = false;
       return this;
@@ -152,7 +162,7 @@ public class test4 extends org.apache.avro.specific.SpecificRecordBase implement
     }
     
     /** Sets the value of the 'aListOfMapToLong' field */
-    public com.maxpoint.cascading.avro.test4.Builder setAListOfMapToLong(java.util.List<java.util.Map<java.lang.CharSequence,java.lang.Long>> value) {
+    public cascading.avro.test4.Builder setAListOfMapToLong(java.util.List<java.util.Map<java.lang.CharSequence,java.lang.Long>> value) {
       validate(fields()[1], value);
       this.aListOfMapToLong = value;
       fieldSetFlags()[1] = true;
@@ -165,7 +175,7 @@ public class test4 extends org.apache.avro.specific.SpecificRecordBase implement
     }
     
     /** Clears the value of the 'aListOfMapToLong' field */
-    public com.maxpoint.cascading.avro.test4.Builder clearAListOfMapToLong() {
+    public cascading.avro.test4.Builder clearAListOfMapToLong() {
       aListOfMapToLong = null;
       fieldSetFlags()[1] = false;
       return this;

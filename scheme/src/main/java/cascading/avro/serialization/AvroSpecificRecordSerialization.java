@@ -21,6 +21,7 @@ package cascading.avro.serialization;
 import org.apache.avro.Schema;
 import org.apache.avro.io.*;
 import org.apache.avro.reflect.ReflectDatumWriter;
+import org.apache.avro.specific.SpecificData;
 import org.apache.avro.specific.SpecificDatumReader;
 import org.apache.avro.specific.SpecificRecord;
 import org.apache.hadoop.conf.Configured;
@@ -48,14 +49,8 @@ public class AvroSpecificRecordSerialization<T> extends Configured
   private Schema getSchema(Class<T> c) {
     Schema schema = SCHEMA_CACHE.get(c);
     if (schema == null) {
-      try {
-        schema = ((SpecificRecord) c.newInstance()).getSchema();
-        SCHEMA_CACHE.put(c, schema);
-      } catch (InstantiationException e) {
-        throw new RuntimeException("Unable to infer a schema from " + c);
-      } catch (IllegalAccessException e) {
-        throw new RuntimeException("Unable to infer a schema from " + c);
-      }
+      schema = SpecificData.get().getSchema(c);
+      SCHEMA_CACHE.put(c, schema);
     }
     return schema;
   }
@@ -109,21 +104,20 @@ public class AvroSpecificRecordSerialization<T> extends Configured
   }
 
   /**
-   * AvroSpecificRecordSerialization was added primarily for Scalding interop since Kryo 
-   * has trouble with some nested Avro records. The only time you need to use it in 
-   * Cascading is if you have Avro records inside a tuple and then do an operation that 
-   * forces a reduce. In this case Hadoop doesn't know how to serialize Avro records 
+   * AvroSpecificRecordSerialization was added primarily for Scalding interop since Kryo
+   * has trouble with some nested Avro records. The only time you need to use it in
+   * Cascading is if you have Avro records inside a tuple and then do an operation that
+   * forces a reduce. In this case Hadoop doesn't know how to serialize Avro records
    * so this class plugs in to do that.
-   * 
-   * Add it to the list of other serialization classes in "io.serializations" property. 
-   * The order is important, especially if Kryo is configured to accept all classes. 
+   * <p/>
+   * Add it to the list of other serialization classes in "io.serializations" property.
+   * The order is important, especially if Kryo is configured to accept all classes.
    * In this case you want this serializer to come first in the list.
-   * 
-   * FWIW - this has nothing to do with Scalding. It's usable and useful for all DSLs and 
+   * <p/>
+   * FWIW - this has nothing to do with Scalding. It's usable and useful for all DSLs and
    * straight up Cascading
-   *
    */
-private class AvroSpecificRecordSerializer implements Serializer<T> {
+  private class AvroSpecificRecordSerializer implements Serializer<T> {
 
     private DatumWriter<T> writer;
     private OutputStream out;

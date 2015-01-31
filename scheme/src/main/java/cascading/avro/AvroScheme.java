@@ -14,6 +14,9 @@
 
 package cascading.avro;
 
+import cascading.avro.conversion.AvroConverter;
+import cascading.avro.conversion.AvroToCascading;
+import cascading.avro.conversion.CascadingToAvro;
 import cascading.avro.serialization.AvroSpecificRecordSerialization;
 import cascading.flow.FlowProcess;
 import cascading.scheme.Scheme;
@@ -24,6 +27,8 @@ import cascading.tap.Tap;
 import cascading.tuple.Fields;
 import cascading.tuple.Tuple;
 import cascading.tuple.TupleEntry;
+import com.google.common.base.Function;
+import com.google.common.base.Joiner;
 import org.apache.avro.Schema;
 import org.apache.avro.Schema.Field;
 import org.apache.avro.file.DataFileStream;
@@ -45,12 +50,16 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
 
 public class AvroScheme extends Scheme<JobConf, RecordReader, OutputCollector, Object[], Object[]> {
+    protected Schema schema;
+    protected int recordUnpackDepth;
+    protected AvroConverter<IndexedRecord, TupleEntry> avroToCascading;
+    protected AvroConverter<TupleEntry, IndexedRecord> cascadingToAvro;
 
     private static final String DEFAULT_RECORD_NAME = "CascadingAvroRecord";
     private static final PathFilter filter = new PathFilter() {
@@ -59,14 +68,21 @@ public class AvroScheme extends Scheme<JobConf, RecordReader, OutputCollector, O
             return !path.getName().startsWith("_");
         }
     };
-    Schema schema;
 
     /**
      * Constructor to read from an Avro source or write to an Avro sink without specifying the schema. If using as a sink,
      * the sink Fields must have type information and currently Map and List are not supported.
      */
     public AvroScheme() {
-        this(null);
+        this(null, -1);
+    }
+
+    public AvroScheme(int recordUnpackDepth) {
+        this(null, recordUnpackDepth);
+    }
+
+    public AvroScheme(Schema schema) {
+        this(schema, -1);
     }
 
     /**
@@ -77,7 +93,12 @@ public class AvroScheme extends Scheme<JobConf, RecordReader, OutputCollector, O
      * @param types  array of Class types
      */
     public AvroScheme(Fields fields, Class<?>[] types) {
-        this(CascadingToAvro.generateAvroSchemaFromFieldsAndTypes(DEFAULT_RECORD_NAME, fields, types));
+        this(AvroSchemata.generateAvroSchemaFromFieldsAndTypes(DEFAULT_RECORD_NAME, fields, types), -1);
+    }
+
+
+    public AvroScheme(Schema schema, int recordUnpackDepth) {
+        this(schema, recordUnpackDepth, null, null);
     }
 
     /**
@@ -86,35 +107,43 @@ public class AvroScheme extends Scheme<JobConf, RecordReader, OutputCollector, O
      * is being used as a source). At the moment, we are unable to infer a schema for a sink (this will change soon with
      * a new version of cascading though).
      *
-     * @param schema Avro schema, or null if this is to be inferred from source file. Note that a runtime exception will happen
-     *               if the AvroScheme is used as a sink and no schema is supplied.
+     * @param schema            Avro schema, or null if this is to be inferred from source file. Note that a runtime exception will happen
+     *                          if the AvroScheme is used as a sink and no schema is supplied.
+     * @param recordUnpackDepth
+     * @param avroToCascading
      */
-    public AvroScheme(Schema schema) {
+    public AvroScheme(Schema schema,
+                      int recordUnpackDepth,
+                      AvroConverter<IndexedRecord, TupleEntry> avroToCascading,
+                      AvroConverter<TupleEntry, IndexedRecord> cascadingToAvro) {
+        this.recordUnpackDepth = recordUnpackDepth;
         this.schema = schema;
-
-        if (schema == null) {
-            setSinkFields(Fields.ALL);
-            setSourceFields(Fields.UNKNOWN);
-        } else {
-            Fields cascadingFields = new Fields();
-            for (Field avroField : schema.getFields()) {
-                cascadingFields = cascadingFields.append(
-                        new Fields(avroField.name()));
-            }
-            setSinkFields(cascadingFields);
-            setSourceFields(cascadingFields);
+        this.avroToCascading = avroToCascading != null ? avroToCascading : new AvroToCascading();
+        this.cascadingToAvro = cascadingToAvro != null ? cascadingToAvro : new CascadingToAvro();
+        if (recordUnpackDepth == 0) {
+            // Singleton tuple
+            setSinkFields(Fields.FIRST);
+            setSourceFields(Fields.FIRST);
+        }
+        else if (schema == null) {
+            this.setSinkFields(Fields.ALL);
+            this.setSourceFields(Fields.UNKNOWN);
+        }
+        else {
+            Fields cascadingFields = this.getCascadingFields();
+            this.setSinkFields(cascadingFields);
+            this.setSourceFields(cascadingFields);
         }
     }
 
-    /**
-     * Helper method to read in a schema when de-serializing the object
-     *
-     * @param in The ObjectInputStream containing the serialized object
-     * @return Schema The parsed schema.
-     */
-    protected static Schema readSchema(java.io.ObjectInputStream in) throws IOException {
-        final Schema.Parser parser = new Schema.Parser();
-        return parser.parse(in.readUTF());
+    protected Fields getCascadingFields() {
+        List<Schema.Field> avroFields = this.schema.getFields();
+        Comparable[] fieldNames = new String[avroFields.size()];
+        for (int i = 0; i < avroFields.size(); i++) {
+            Schema.Field avroField = avroFields.get(i);
+            fieldNames[i] = avroField.name();
+        }
+        return new Fields(fieldNames);
     }
 
     /**
@@ -125,7 +154,8 @@ public class AvroScheme extends Scheme<JobConf, RecordReader, OutputCollector, O
     String getJsonSchema() {
         if (schema == null) {
             return "";
-        } else {
+        }
+        else {
             return schema.toString();
         }
     }
@@ -138,20 +168,24 @@ public class AvroScheme extends Scheme<JobConf, RecordReader, OutputCollector, O
      * @throws IOException
      */
     @Override
-    public void sink(
-            FlowProcess<JobConf> flowProcess,
-            SinkCall<Object[], OutputCollector> sinkCall)
-            throws IOException {
+    public void sink(FlowProcess<JobConf> flowProcess, SinkCall<Object[], OutputCollector> sinkCall)
+        throws IOException {
         TupleEntry tupleEntry = sinkCall.getOutgoingEntry();
-
-        IndexedRecord record = new Record((Schema) sinkCall.getContext()[0]);
-        Object[] objectArray = CascadingToAvro.parseTupleEntry(tupleEntry, (Schema) sinkCall.getContext()[0]);
-        for (int i = 0; i < objectArray.length; i++) {
-            record.put(i, objectArray[i]);
-        }
+        Schema schema = (Schema) sinkCall.getContext()[0];
+        IndexedRecord record = this.recordUnpackDepth == 0 ?
+            (IndexedRecord) tupleEntry.getObject(Fields.FIRST) :
+            this.cascadingToAvro.convertRecord(tupleEntry, schema, this.recordUnpackDepth);
         //noinspection unchecked
         sinkCall.getOutput().collect(new AvroWrapper<IndexedRecord>(record), NullWritable.get());
+    }
 
+    protected Function<Schema, IndexedRecord> avroRecordBuilder() {
+        return new Function<Schema, IndexedRecord>() {
+            @Override
+            public IndexedRecord apply(Schema schema) {
+                return new Record(schema);
+            }
+        };
     }
 
     /**
@@ -164,11 +198,10 @@ public class AvroScheme extends Scheme<JobConf, RecordReader, OutputCollector, O
      */
     @Override
     public void sinkPrepare(
-            FlowProcess<JobConf> flowProcess,
-            SinkCall<Object[], OutputCollector> sinkCall)
-            throws IOException {
+        FlowProcess<JobConf> flowProcess,
+        SinkCall<Object[], OutputCollector> sinkCall)
+        throws IOException {
         sinkCall.setContext(new Object[]{schema});
-
     }
 
     /**
@@ -184,9 +217,9 @@ public class AvroScheme extends Scheme<JobConf, RecordReader, OutputCollector, O
      */
     @Override
     public void sinkConfInit(
-            FlowProcess<JobConf> flowProcess,
-            Tap<JobConf, RecordReader, OutputCollector> tap,
-            JobConf conf) {
+        FlowProcess<JobConf> flowProcess,
+        Tap<JobConf, RecordReader, OutputCollector> tap,
+        JobConf conf) {
 
         if (schema == null) {
             throw new RuntimeException("Must provide sink schema");
@@ -194,7 +227,6 @@ public class AvroScheme extends Scheme<JobConf, RecordReader, OutputCollector, O
         // Set the output schema and output format class
         conf.set(AvroJob.OUTPUT_SCHEMA, schema.toString());
         conf.setOutputFormat(AvroOutputFormat.class);
-
 
         // add AvroSerialization to io.serializations
         addAvroSerializations(conf);
@@ -213,14 +245,16 @@ public class AvroScheme extends Scheme<JobConf, RecordReader, OutputCollector, O
         if (schema == null) {
             try {
                 schema = getSourceSchema(flowProcess, tap);
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 throw new RuntimeException("Can't get schema from data source");
             }
         }
         Fields cascadingFields = new Fields();
         if (schema.getType().equals(Schema.Type.NULL)) {
             cascadingFields = Fields.NONE;
-        } else {
+        }
+        else {
             for (Field avroField : schema.getFields())
                 cascadingFields = cascadingFields.append(new Fields(avroField.name()));
         }
@@ -238,9 +272,9 @@ public class AvroScheme extends Scheme<JobConf, RecordReader, OutputCollector, O
      */
     @Override
     public boolean source(
-            FlowProcess<JobConf> flowProcess,
-            SourceCall<Object[], RecordReader> sourceCall)
-            throws IOException {
+        FlowProcess<JobConf> flowProcess,
+        SourceCall<Object[], RecordReader> sourceCall)
+        throws IOException {
 
         @SuppressWarnings("unchecked") RecordReader<AvroWrapper<IndexedRecord>, Writable> input = sourceCall.getInput();
         AvroWrapper<IndexedRecord> wrapper = input.createKey();
@@ -248,11 +282,15 @@ public class AvroScheme extends Scheme<JobConf, RecordReader, OutputCollector, O
             return false;
         }
         IndexedRecord record = wrapper.datum();
-        Tuple tuple = sourceCall.getIncomingEntry().getTuple();
-        tuple.clear();
 
-        Object[] split = AvroToCascading.parseRecord(record, schema);
-        tuple.addAll(split);
+        if (this.recordUnpackDepth == 0) {
+            Tuple tuple = sourceCall.getIncomingEntry().getTuple();
+            tuple.clear();
+            tuple.add(record);
+        }
+        else {
+            this.avroToCascading.convertRecord(sourceCall.getIncomingEntry(), record, schema, this.recordUnpackDepth);
+        }
 
         return true;
     }
@@ -270,9 +308,9 @@ public class AvroScheme extends Scheme<JobConf, RecordReader, OutputCollector, O
      */
     @Override
     public void sourceConfInit(
-            FlowProcess<JobConf> flowProcess,
-            Tap<JobConf, RecordReader, OutputCollector> tap,
-            JobConf conf) {
+        FlowProcess<JobConf> flowProcess,
+        Tap<JobConf, RecordReader, OutputCollector> tap,
+        JobConf conf) {
 
         retrieveSourceFields(flowProcess, tap);
         // Set the input schema and input class
@@ -282,6 +320,8 @@ public class AvroScheme extends Scheme<JobConf, RecordReader, OutputCollector, O
         // add AvroSerialization to io.serializations
         addAvroSerializations(conf);
     }
+
+    /* TODO: this is a bit ugly does it really belong here? what if we have files with different schemas? */
 
     /**
      * This method peeks at the source data to get a schema when none has been provided.
@@ -306,7 +346,8 @@ public class AvroScheme extends Scheme<JobConf, RecordReader, OutputCollector, O
                 for (FileStatus child : Arrays.asList(fs.listStatus(status.getPath(), filter))) {
                     if (child.isDir()) {
                         statuses.addAll(Arrays.asList(fs.listStatus(child.getPath(), filter)));
-                    } else if (fs.isFile(child.getPath())) {
+                    }
+                    else if (fs.isFile(child.getPath())) {
                         statuses.add(child);
                     }
                 }
@@ -339,25 +380,38 @@ public class AvroScheme extends Scheme<JobConf, RecordReader, OutputCollector, O
         return Schema.create(Schema.Type.NULL);
     }
 
-    private void addAvroSerializations(JobConf conf) {
-        Collection<String> serializations = conf.getStringCollection("io.serializations");
-        if (!serializations.contains(AvroSerialization.class.getName())) {
-            serializations.add(AvroSerialization.class.getName());
-            serializations.add(AvroSpecificRecordSerialization.class.getName());
-        }
+    public static HashSet<String> serializationClassNames() {
+        HashSet<String> serializations = new HashSet<String>();
+        serializations.add(AvroSerialization.class.getName());
+        serializations.add(AvroSpecificRecordSerialization.class.getName());
+        return serializations;
+    }
 
-
+    public static void addAvroSerializations(JobConf conf) {
+        HashSet<String> serializations = serializationClassNames();
+        serializations.addAll(conf.getStringCollection("io.serializations"));
         conf.setStrings("io.serializations", serializations.toArray(new String[serializations.size()]));
     }
 
-    private void writeObject(java.io.ObjectOutputStream out)
-            throws IOException {
-        out.writeUTF(this.schema.toString());
+    public static String serializationClassNamesString() {
+        Joiner joiner = Joiner.on(',');
+        return joiner.join(serializationClassNames());
     }
 
-    private void readObject(java.io.ObjectInputStream in)
-            throws IOException {
-        this.schema = readSchema(in);
+    // Serializability of this Scheme
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+        out.writeUTF(this.schema.toString());
+        out.writeInt(this.recordUnpackDepth);
+        out.writeObject(this.avroToCascading);
+        out.writeObject(this.cascadingToAvro);
+    }
+
+    @SuppressWarnings({"unchecked"})
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+        this.schema = new Schema.Parser().parse(in.readUTF());
+        this.recordUnpackDepth = in.readInt();
+        this.avroToCascading = (AvroConverter) in.readObject();
+        this.cascadingToAvro = (AvroConverter) in.readObject();
     }
 
     @Override
@@ -376,15 +430,14 @@ public class AvroScheme extends Scheme<JobConf, RecordReader, OutputCollector, O
     @Override
     public String toString() {
         return "AvroScheme{" +
-                "schema=" + schema +
-                '}';
+            "schema=" + schema +
+            '}';
     }
 
     @Override
     public int hashCode() {
-
         return 31 * getSinkFields().hashCode() +
-                (schema == null ? 0 : schema.hashCode());
+            (schema == null ? 0 : schema.hashCode());
     }
 }
 

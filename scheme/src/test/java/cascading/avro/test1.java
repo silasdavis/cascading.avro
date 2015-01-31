@@ -7,7 +7,7 @@ package cascading.avro;
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class test1 extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"test1\",\"namespace\":\"cascading.avro\",\"fields\":[{\"name\":\"aBoolean\",\"type\":\"boolean\",\"default\":true},{\"name\":\"anInt\",\"type\":\"int\",\"default\":123},{\"name\":\"aLong\",\"type\":\"long\",\"default\":1},{\"name\":\"aDouble\",\"type\":\"double\",\"default\":110.1},{\"name\":\"aFloat\",\"type\":\"float\",\"default\":0.1},{\"name\":\"aBytes\",\"type\":\"bytes\"},{\"name\":\"aFixed\",\"type\":{\"type\":\"fixed\",\"name\":\"md5\",\"size\":16}},{\"name\":\"aNull\",\"type\":\"null\"},{\"name\":\"aString\",\"type\":[\"string\",\"null\"],\"default\":\"foobar\"},{\"name\":\"aList\",\"type\":{\"type\":\"array\",\"items\":\"int\"}},{\"name\":\"aMap\",\"type\":{\"type\":\"map\",\"values\":\"int\"}},{\"name\":\"aUnion\",\"type\":[\"null\",\"int\"]}]}");
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"test1\",\"namespace\":\"cascading.avro\",\"fields\":[{\"name\":\"aBoolean\",\"type\":\"boolean\",\"default\":true},{\"name\":\"anInt\",\"type\":\"int\",\"default\":123},{\"name\":\"aLong\",\"type\":\"long\",\"default\":1},{\"name\":\"aDouble\",\"type\":\"double\",\"default\":110.1},{\"name\":\"aFloat\",\"type\":\"float\",\"default\":0.1},{\"name\":\"aBytes\",\"type\":\"bytes\"},{\"name\":\"aFixed\",\"type\":{\"type\":\"fixed\",\"name\":\"md51\",\"size\":16}},{\"name\":\"aNull\",\"type\":\"null\"},{\"name\":\"aString\",\"type\":[\"string\",\"null\"],\"default\":\"foobar\"},{\"name\":\"aList\",\"type\":{\"type\":\"array\",\"items\":\"int\"}},{\"name\":\"aMap\",\"type\":{\"type\":\"map\",\"values\":\"int\"}},{\"name\":\"aUnion\",\"type\":[\"null\",\"int\"]}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
   @Deprecated public boolean aBoolean;
   @Deprecated public int anInt;
@@ -15,7 +15,7 @@ public class test1 extends org.apache.avro.specific.SpecificRecordBase implement
   @Deprecated public double aDouble;
   @Deprecated public float aFloat;
   @Deprecated public java.nio.ByteBuffer aBytes;
-  @Deprecated public cascading.avro.md5 aFixed;
+  @Deprecated public cascading.avro.md51 aFixed;
   @Deprecated public java.lang.Void aNull;
   @Deprecated public java.lang.CharSequence aString;
   @Deprecated public java.util.List<java.lang.Integer> aList;
@@ -23,14 +23,16 @@ public class test1 extends org.apache.avro.specific.SpecificRecordBase implement
   @Deprecated public java.lang.Integer aUnion;
 
   /**
-   * Default constructor.
+   * Default constructor.  Note that this does not initialize fields
+   * to their default values from the schema.  If that is desired then
+   * one should use <code>newBuilder()</code>. 
    */
   public test1() {}
 
   /**
    * All-args constructor.
    */
-  public test1(java.lang.Boolean aBoolean, java.lang.Integer anInt, java.lang.Long aLong, java.lang.Double aDouble, java.lang.Float aFloat, java.nio.ByteBuffer aBytes, cascading.avro.md5 aFixed, java.lang.Void aNull, java.lang.CharSequence aString, java.util.List<java.lang.Integer> aList, java.util.Map<java.lang.CharSequence,java.lang.Integer> aMap, java.lang.Integer aUnion) {
+  public test1(java.lang.Boolean aBoolean, java.lang.Integer anInt, java.lang.Long aLong, java.lang.Double aDouble, java.lang.Float aFloat, java.nio.ByteBuffer aBytes, cascading.avro.md51 aFixed, java.lang.Void aNull, java.lang.CharSequence aString, java.util.List<java.lang.Integer> aList, java.util.Map<java.lang.CharSequence,java.lang.Integer> aMap, java.lang.Integer aUnion) {
     this.aBoolean = aBoolean;
     this.anInt = anInt;
     this.aLong = aLong;
@@ -74,7 +76,7 @@ public class test1 extends org.apache.avro.specific.SpecificRecordBase implement
     case 3: aDouble = (java.lang.Double)value$; break;
     case 4: aFloat = (java.lang.Float)value$; break;
     case 5: aBytes = (java.nio.ByteBuffer)value$; break;
-    case 6: aFixed = (cascading.avro.md5)value$; break;
+    case 6: aFixed = (cascading.avro.md51)value$; break;
     case 7: aNull = (java.lang.Void)value$; break;
     case 8: aString = (java.lang.CharSequence)value$; break;
     case 9: aList = (java.util.List<java.lang.Integer>)value$; break;
@@ -177,7 +179,7 @@ public class test1 extends org.apache.avro.specific.SpecificRecordBase implement
   /**
    * Gets the value of the 'aFixed' field.
    */
-  public cascading.avro.md5 getAFixed() {
+  public cascading.avro.md51 getAFixed() {
     return aFixed;
   }
 
@@ -185,7 +187,7 @@ public class test1 extends org.apache.avro.specific.SpecificRecordBase implement
    * Sets the value of the 'aFixed' field.
    * @param value the value to set.
    */
-  public void setAFixed(cascading.avro.md5 value) {
+  public void setAFixed(cascading.avro.md51 value) {
     this.aFixed = value;
   }
 
@@ -291,7 +293,7 @@ public class test1 extends org.apache.avro.specific.SpecificRecordBase implement
     private double aDouble;
     private float aFloat;
     private java.nio.ByteBuffer aBytes;
-    private cascading.avro.md5 aFixed;
+    private cascading.avro.md51 aFixed;
     private java.lang.Void aNull;
     private java.lang.CharSequence aString;
     private java.util.List<java.lang.Integer> aList;
@@ -306,6 +308,54 @@ public class test1 extends org.apache.avro.specific.SpecificRecordBase implement
     /** Creates a Builder by copying an existing Builder */
     private Builder(cascading.avro.test1.Builder other) {
       super(other);
+      if (isValidValue(fields()[0], other.aBoolean)) {
+        this.aBoolean = data().deepCopy(fields()[0].schema(), other.aBoolean);
+        fieldSetFlags()[0] = true;
+      }
+      if (isValidValue(fields()[1], other.anInt)) {
+        this.anInt = data().deepCopy(fields()[1].schema(), other.anInt);
+        fieldSetFlags()[1] = true;
+      }
+      if (isValidValue(fields()[2], other.aLong)) {
+        this.aLong = data().deepCopy(fields()[2].schema(), other.aLong);
+        fieldSetFlags()[2] = true;
+      }
+      if (isValidValue(fields()[3], other.aDouble)) {
+        this.aDouble = data().deepCopy(fields()[3].schema(), other.aDouble);
+        fieldSetFlags()[3] = true;
+      }
+      if (isValidValue(fields()[4], other.aFloat)) {
+        this.aFloat = data().deepCopy(fields()[4].schema(), other.aFloat);
+        fieldSetFlags()[4] = true;
+      }
+      if (isValidValue(fields()[5], other.aBytes)) {
+        this.aBytes = data().deepCopy(fields()[5].schema(), other.aBytes);
+        fieldSetFlags()[5] = true;
+      }
+      if (isValidValue(fields()[6], other.aFixed)) {
+        this.aFixed = data().deepCopy(fields()[6].schema(), other.aFixed);
+        fieldSetFlags()[6] = true;
+      }
+      if (isValidValue(fields()[7], other.aNull)) {
+        this.aNull = data().deepCopy(fields()[7].schema(), other.aNull);
+        fieldSetFlags()[7] = true;
+      }
+      if (isValidValue(fields()[8], other.aString)) {
+        this.aString = data().deepCopy(fields()[8].schema(), other.aString);
+        fieldSetFlags()[8] = true;
+      }
+      if (isValidValue(fields()[9], other.aList)) {
+        this.aList = data().deepCopy(fields()[9].schema(), other.aList);
+        fieldSetFlags()[9] = true;
+      }
+      if (isValidValue(fields()[10], other.aMap)) {
+        this.aMap = data().deepCopy(fields()[10].schema(), other.aMap);
+        fieldSetFlags()[10] = true;
+      }
+      if (isValidValue(fields()[11], other.aUnion)) {
+        this.aUnion = data().deepCopy(fields()[11].schema(), other.aUnion);
+        fieldSetFlags()[11] = true;
+      }
     }
     
     /** Creates a Builder by copying an existing test1 instance */
@@ -507,12 +557,12 @@ public class test1 extends org.apache.avro.specific.SpecificRecordBase implement
     }
 
     /** Gets the value of the 'aFixed' field */
-    public cascading.avro.md5 getAFixed() {
+    public cascading.avro.md51 getAFixed() {
       return aFixed;
     }
     
     /** Sets the value of the 'aFixed' field */
-    public cascading.avro.test1.Builder setAFixed(cascading.avro.md5 value) {
+    public cascading.avro.test1.Builder setAFixed(cascading.avro.md51 value) {
       validate(fields()[6], value);
       this.aFixed = value;
       fieldSetFlags()[6] = true;
@@ -666,7 +716,7 @@ public class test1 extends org.apache.avro.specific.SpecificRecordBase implement
         record.aDouble = fieldSetFlags()[3] ? this.aDouble : (java.lang.Double) defaultValue(fields()[3]);
         record.aFloat = fieldSetFlags()[4] ? this.aFloat : (java.lang.Float) defaultValue(fields()[4]);
         record.aBytes = fieldSetFlags()[5] ? this.aBytes : (java.nio.ByteBuffer) defaultValue(fields()[5]);
-        record.aFixed = fieldSetFlags()[6] ? this.aFixed : (cascading.avro.md5) defaultValue(fields()[6]);
+        record.aFixed = fieldSetFlags()[6] ? this.aFixed : (cascading.avro.md51) defaultValue(fields()[6]);
         record.aNull = fieldSetFlags()[7] ? this.aNull : (java.lang.Void) defaultValue(fields()[7]);
         record.aString = fieldSetFlags()[8] ? this.aString : (java.lang.CharSequence) defaultValue(fields()[8]);
         record.aList = fieldSetFlags()[9] ? this.aList : (java.util.List<java.lang.Integer>) defaultValue(fields()[9]);

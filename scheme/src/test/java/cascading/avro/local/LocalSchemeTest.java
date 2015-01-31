@@ -33,6 +33,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static cascading.avro.conversion.TypeMappings.asMap;
+
 
 public class LocalSchemeTest extends Assert {
 
@@ -97,10 +99,9 @@ public class LocalSchemeTest extends Assert {
         assertEquals(bytesWritable2, readEntry1.getObject(5));
         assertEquals(bytesWritable, readEntry1.getObject(6));
         assertEquals("test-string", readEntry1.getString(8));
-        assertEquals("0", ((List) readEntry1.getObject(9)).get(0)
+        assertEquals("0", ((Tuple) readEntry1.getObject(9)).get(0)
                 .toString());
-        assertEquals(1,
-                ((Map) readEntry1.getObject(10)).get("one"));
+        assertEquals(1, asMap(readEntry1.getObject(10)).get("one"));
         assertTrue(iterator.hasNext());
         final TupleEntry readEntry2 = iterator.next();
 

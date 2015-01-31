@@ -13,7 +13,9 @@ public class nested extends org.apache.avro.specific.SpecificRecordBase implemen
   @Deprecated public java.lang.CharSequence anInnerField2;
 
   /**
-   * Default constructor.
+   * Default constructor.  Note that this does not initialize fields
+   * to their default values from the schema.  If that is desired then
+   * one should use <code>newBuilder()</code>. 
    */
   public nested() {}
 
@@ -106,6 +108,14 @@ public class nested extends org.apache.avro.specific.SpecificRecordBase implemen
     /** Creates a Builder by copying an existing Builder */
     private Builder(cascading.avro.nested.Builder other) {
       super(other);
+      if (isValidValue(fields()[0], other.anInnerField1)) {
+        this.anInnerField1 = data().deepCopy(fields()[0].schema(), other.anInnerField1);
+        fieldSetFlags()[0] = true;
+      }
+      if (isValidValue(fields()[1], other.anInnerField2)) {
+        this.anInnerField2 = data().deepCopy(fields()[1].schema(), other.anInnerField2);
+        fieldSetFlags()[1] = true;
+      }
     }
     
     /** Creates a Builder by copying an existing nested instance */

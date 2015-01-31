@@ -9,7 +9,7 @@
         {"name": "aDouble", "type": "double", "default": 110.1 },
         {"name": "aFloat", "type": "float", "default": 0.1 },
         {"name": "aBytes", "type": "bytes" },
-        {"name": "aFixed", "type": {"name": "md5", "type": "fixed", "size": 16 }},
+        {"name": "aFixed", "type": {"name": "md51", "type": "fixed", "size": 16 }},
         {"name": "aNull", "type": "null" },
         {"name": "aString", "type": ["string", "null"], "default": "foobar" },
         {"name": "aList", "type":{"type":"array", "items":"int"}},
