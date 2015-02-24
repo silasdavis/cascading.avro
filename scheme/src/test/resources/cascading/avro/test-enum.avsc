@@ -1,6 +1,6 @@
 {
   "type": "enum",
-  "namespace": "cascading.avro",
+  "namespace": "cascading.avro.generated",
   "name": "TestEnum",
   "symbols": [
     "ONE",

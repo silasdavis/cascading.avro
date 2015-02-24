@@ -15,6 +15,7 @@
 package cascading.avro;
 
 import cascading.avro.conversion.CascadingToAvro;
+import cascading.avro.generated.Test5;
 import cascading.tuple.Fields;
 import cascading.tuple.Tuple;
 import cascading.tuple.TupleEntry;
@@ -274,7 +275,7 @@ public class CascadingToAvroTest {
         Fixed fixed = new Fixed(schema.getField("aFixed").schema(), new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
             13, 14, 15, 16});
 
-        test5 record = (test5) this.cascadingToAvro.convertRecord(tupleEntry, schema, recordUnpackDepth);
+        Test5 record = (Test5) this.cascadingToAvro.convertRecord(tupleEntry, schema, recordUnpackDepth);
 
         assertThat((Boolean) record.get(0), is(false));
         assertThat((Integer) record.get(1), is(10));

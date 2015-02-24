@@ -1,7 +1,7 @@
 {
     "type": "record",
-    "name": "test1",
-    "namespace": "cascading.avro",
+    "name": "Test1",
+    "namespace": "cascading.avro.generated",
     "fields": [
         {"name": "aBoolean", "type": "boolean", "default": true },
         {"name": "anInt", "type": "int", "default": 123 },

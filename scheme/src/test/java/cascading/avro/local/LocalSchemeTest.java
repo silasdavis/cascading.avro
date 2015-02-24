@@ -116,7 +116,7 @@ public class LocalSchemeTest extends Assert {
         String finalPath = tempDir.getRoot().toString() + "/testGrouped/final";
 
         // Get the schema from a file
-        Schema schema = new Schema.Parser().parse(getClass().getResourceAsStream("../test6.avsc"));
+        Schema schema = new Schema.Parser().parse(getClass().getResourceAsStream("../wordcount.avsc"));
 
         LocalFlowConnector flowConnector = new LocalFlowConnector();
 

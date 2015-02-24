@@ -17,7 +17,7 @@ package cascading.avro;
 import cascading.avro.conversion.AvroConverter;
 import cascading.avro.conversion.AvroToCascading;
 import cascading.avro.conversion.CascadingToAvro;
-import cascading.avro.serialization.AvroSpecificRecordSerialization;
+import cascading.avro.serialization.AvroSpecificDataSerialization;
 import cascading.flow.FlowProcess;
 import cascading.scheme.Scheme;
 import cascading.scheme.SinkCall;
@@ -380,22 +380,22 @@ public class AvroScheme extends Scheme<JobConf, RecordReader, OutputCollector, O
         return Schema.create(Schema.Type.NULL);
     }
 
-    public static HashSet<String> serializationClassNames() {
+    public static HashSet<String> getSerializationClassNames() {
         HashSet<String> serializations = new HashSet<String>();
         serializations.add(AvroSerialization.class.getName());
-        serializations.add(AvroSpecificRecordSerialization.class.getName());
+        serializations.add(AvroSpecificDataSerialization.class.getName());
         return serializations;
     }
 
     public static void addAvroSerializations(JobConf conf) {
-        HashSet<String> serializations = serializationClassNames();
+        HashSet<String> serializations = getSerializationClassNames();
         serializations.addAll(conf.getStringCollection("io.serializations"));
         conf.setStrings("io.serializations", serializations.toArray(new String[serializations.size()]));
     }
 
     public static String serializationClassNamesString() {
         Joiner joiner = Joiner.on(',');
-        return joiner.join(serializationClassNames());
+        return joiner.join(getSerializationClassNames());
     }
 
     // Serializability of this Scheme

@@ -14,6 +14,8 @@
 
 package cascading.avro;
 
+import cascading.avro.generated.TestEnum;
+import cascading.avro.generated.TreeNode;
 import cascading.flow.Flow;
 import cascading.flow.FlowDef;
 import cascading.flow.hadoop.HadoopFlowConnector;
@@ -711,25 +713,13 @@ public class AvroSchemeTest extends Assert {
   }
 
   @Test
-  public void testEnumInSchema() throws Exception {
-    AvroScheme avroScheme = new AvroScheme(new Fields("a"), new Class[]{TestEnum.class});
-    String jsonSchema = avroScheme.getJsonSchema();
-    String enumField = String.format("{\"type\":\"enum\",\"name\":\"%s\",\"namespace\":\"%s\",\"symbols\":[\"ONE\",\"TWO\"]}",
-        "TestEnum", TestEnum.class.getPackage().getName());
-
-    String expected = String.format("{\"type\":\"record\",\"name\":\"CascadingAvroRecord\",\"doc\":\"auto generated\",\"fields\":[{\"name\":\"a\",\"type\":[\"null\",%s],\"doc\":\"\"}]}",
-        enumField);
-    assertEquals(expected, jsonSchema);
-  }
-
-  @Test
   public void groupByAvroReadWriteTest() throws Exception {
     String docPath = getClass().getResource("words.txt").getPath();
     final String wcPath = tempPath("out");
     final String finalPath = tempPath("final");
 
     // Get the schema from a file
-    Schema schema = new Schema.Parser().parse(getClass().getResourceAsStream("test6.avsc"));
+    Schema schema = new Schema.Parser().parse(getClass().getResourceAsStream("wordcount.avsc"));
 
     HadoopFlowConnector flowConnector = new HadoopFlowConnector();
 

@@ -15,6 +15,7 @@
 package cascading.avro;
 
 import cascading.avro.conversion.AvroToCascading;
+import cascading.avro.generated.TreeNode;
 import cascading.tuple.Tuple;
 import cascading.tuple.TupleEntry;
 import org.apache.avro.Schema;

@@ -68,7 +68,6 @@ public class AvroToCascading extends AvroConverterBase<IndexedRecord, TupleEntry
     @Override
     public Object convertFixed(Object obj, Schema schema) {
         GenericData.Fixed fixed = (GenericData.Fixed) obj;
-        this.createSpecificContainer(schema);
         return new BytesWritable(fixed.bytes());
     }
 

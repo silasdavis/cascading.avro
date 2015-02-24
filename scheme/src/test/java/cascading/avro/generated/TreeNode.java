@@ -3,15 +3,15 @@
  * 
  * DO NOT EDIT DIRECTLY
  */
-package cascading.avro;  
+package cascading.avro.generated;  
 @SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class TreeNode extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
-  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"TreeNode\",\"namespace\":\"cascading.avro\",\"fields\":[{\"name\":\"label\",\"type\":[\"null\",\"string\"]},{\"name\":\"count\",\"type\":\"int\"},{\"name\":\"children\",\"type\":{\"type\":\"array\",\"items\":\"TreeNode\"}}]}");
+  public static final org.apache.avro.Schema SCHEMA$ = new org.apache.avro.Schema.Parser().parse("{\"type\":\"record\",\"name\":\"TreeNode\",\"namespace\":\"cascading.avro.generated\",\"fields\":[{\"name\":\"label\",\"type\":[\"null\",\"string\"]},{\"name\":\"count\",\"type\":\"int\"},{\"name\":\"children\",\"type\":{\"type\":\"array\",\"items\":\"TreeNode\"}}]}");
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
   @Deprecated public java.lang.CharSequence label;
   @Deprecated public int count;
-  @Deprecated public java.util.List<cascading.avro.TreeNode> children;
+  @Deprecated public java.util.List<cascading.avro.generated.TreeNode> children;
 
   /**
    * Default constructor.  Note that this does not initialize fields
@@ -23,7 +23,7 @@ public class TreeNode extends org.apache.avro.specific.SpecificRecordBase implem
   /**
    * All-args constructor.
    */
-  public TreeNode(java.lang.CharSequence label, java.lang.Integer count, java.util.List<cascading.avro.TreeNode> children) {
+  public TreeNode(java.lang.CharSequence label, java.lang.Integer count, java.util.List<cascading.avro.generated.TreeNode> children) {
     this.label = label;
     this.count = count;
     this.children = children;
@@ -45,7 +45,7 @@ public class TreeNode extends org.apache.avro.specific.SpecificRecordBase implem
     switch (field$) {
     case 0: label = (java.lang.CharSequence)value$; break;
     case 1: count = (java.lang.Integer)value$; break;
-    case 2: children = (java.util.List<cascading.avro.TreeNode>)value$; break;
+    case 2: children = (java.util.List<cascading.avro.generated.TreeNode>)value$; break;
     default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
@@ -83,7 +83,7 @@ public class TreeNode extends org.apache.avro.specific.SpecificRecordBase implem
   /**
    * Gets the value of the 'children' field.
    */
-  public java.util.List<cascading.avro.TreeNode> getChildren() {
+  public java.util.List<cascading.avro.generated.TreeNode> getChildren() {
     return children;
   }
 
@@ -91,23 +91,23 @@ public class TreeNode extends org.apache.avro.specific.SpecificRecordBase implem
    * Sets the value of the 'children' field.
    * @param value the value to set.
    */
-  public void setChildren(java.util.List<cascading.avro.TreeNode> value) {
+  public void setChildren(java.util.List<cascading.avro.generated.TreeNode> value) {
     this.children = value;
   }
 
   /** Creates a new TreeNode RecordBuilder */
-  public static cascading.avro.TreeNode.Builder newBuilder() {
-    return new cascading.avro.TreeNode.Builder();
+  public static cascading.avro.generated.TreeNode.Builder newBuilder() {
+    return new cascading.avro.generated.TreeNode.Builder();
   }
   
   /** Creates a new TreeNode RecordBuilder by copying an existing Builder */
-  public static cascading.avro.TreeNode.Builder newBuilder(cascading.avro.TreeNode.Builder other) {
-    return new cascading.avro.TreeNode.Builder(other);
+  public static cascading.avro.generated.TreeNode.Builder newBuilder(cascading.avro.generated.TreeNode.Builder other) {
+    return new cascading.avro.generated.TreeNode.Builder(other);
   }
   
   /** Creates a new TreeNode RecordBuilder by copying an existing TreeNode instance */
-  public static cascading.avro.TreeNode.Builder newBuilder(cascading.avro.TreeNode other) {
-    return new cascading.avro.TreeNode.Builder(other);
+  public static cascading.avro.generated.TreeNode.Builder newBuilder(cascading.avro.generated.TreeNode other) {
+    return new cascading.avro.generated.TreeNode.Builder(other);
   }
   
   /**
@@ -118,15 +118,15 @@ public class TreeNode extends org.apache.avro.specific.SpecificRecordBase implem
 
     private java.lang.CharSequence label;
     private int count;
-    private java.util.List<cascading.avro.TreeNode> children;
+    private java.util.List<cascading.avro.generated.TreeNode> children;
 
     /** Creates a new Builder */
     private Builder() {
-      super(cascading.avro.TreeNode.SCHEMA$);
+      super(cascading.avro.generated.TreeNode.SCHEMA$);
     }
     
     /** Creates a Builder by copying an existing Builder */
-    private Builder(cascading.avro.TreeNode.Builder other) {
+    private Builder(cascading.avro.generated.TreeNode.Builder other) {
       super(other);
       if (isValidValue(fields()[0], other.label)) {
         this.label = data().deepCopy(fields()[0].schema(), other.label);
@@ -143,8 +143,8 @@ public class TreeNode extends org.apache.avro.specific.SpecificRecordBase implem
     }
     
     /** Creates a Builder by copying an existing TreeNode instance */
-    private Builder(cascading.avro.TreeNode other) {
-            super(cascading.avro.TreeNode.SCHEMA$);
+    private Builder(cascading.avro.generated.TreeNode other) {
+            super(cascading.avro.generated.TreeNode.SCHEMA$);
       if (isValidValue(fields()[0], other.label)) {
         this.label = data().deepCopy(fields()[0].schema(), other.label);
         fieldSetFlags()[0] = true;
@@ -165,7 +165,7 @@ public class TreeNode extends org.apache.avro.specific.SpecificRecordBase implem
     }
     
     /** Sets the value of the 'label' field */
-    public cascading.avro.TreeNode.Builder setLabel(java.lang.CharSequence value) {
+    public cascading.avro.generated.TreeNode.Builder setLabel(java.lang.CharSequence value) {
       validate(fields()[0], value);
       this.label = value;
       fieldSetFlags()[0] = true;
@@ -178,7 +178,7 @@ public class TreeNode extends org.apache.avro.specific.SpecificRecordBase implem
     }
     
     /** Clears the value of the 'label' field */
-    public cascading.avro.TreeNode.Builder clearLabel() {
+    public cascading.avro.generated.TreeNode.Builder clearLabel() {
       label = null;
       fieldSetFlags()[0] = false;
       return this;
@@ -190,7 +190,7 @@ public class TreeNode extends org.apache.avro.specific.SpecificRecordBase implem
     }
     
     /** Sets the value of the 'count' field */
-    public cascading.avro.TreeNode.Builder setCount(int value) {
+    public cascading.avro.generated.TreeNode.Builder setCount(int value) {
       validate(fields()[1], value);
       this.count = value;
       fieldSetFlags()[1] = true;
@@ -203,18 +203,18 @@ public class TreeNode extends org.apache.avro.specific.SpecificRecordBase implem
     }
     
     /** Clears the value of the 'count' field */
-    public cascading.avro.TreeNode.Builder clearCount() {
+    public cascading.avro.generated.TreeNode.Builder clearCount() {
       fieldSetFlags()[1] = false;
       return this;
     }
 
     /** Gets the value of the 'children' field */
-    public java.util.List<cascading.avro.TreeNode> getChildren() {
+    public java.util.List<cascading.avro.generated.TreeNode> getChildren() {
       return children;
     }
     
     /** Sets the value of the 'children' field */
-    public cascading.avro.TreeNode.Builder setChildren(java.util.List<cascading.avro.TreeNode> value) {
+    public cascading.avro.generated.TreeNode.Builder setChildren(java.util.List<cascading.avro.generated.TreeNode> value) {
       validate(fields()[2], value);
       this.children = value;
       fieldSetFlags()[2] = true;
@@ -227,7 +227,7 @@ public class TreeNode extends org.apache.avro.specific.SpecificRecordBase implem
     }
     
     /** Clears the value of the 'children' field */
-    public cascading.avro.TreeNode.Builder clearChildren() {
+    public cascading.avro.generated.TreeNode.Builder clearChildren() {
       children = null;
       fieldSetFlags()[2] = false;
       return this;
@@ -239,7 +239,7 @@ public class TreeNode extends org.apache.avro.specific.SpecificRecordBase implem
         TreeNode record = new TreeNode();
         record.label = fieldSetFlags()[0] ? this.label : (java.lang.CharSequence) defaultValue(fields()[0]);
         record.count = fieldSetFlags()[1] ? this.count : (java.lang.Integer) defaultValue(fields()[1]);
-        record.children = fieldSetFlags()[2] ? this.children : (java.util.List<cascading.avro.TreeNode>) defaultValue(fields()[2]);
+        record.children = fieldSetFlags()[2] ? this.children : (java.util.List<cascading.avro.generated.TreeNode>) defaultValue(fields()[2]);
         return record;
       } catch (Exception e) {
         throw new org.apache.avro.AvroRuntimeException(e);
