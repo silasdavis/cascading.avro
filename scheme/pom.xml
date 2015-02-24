@@ -87,10 +87,15 @@
 
     <distributionManagement>
         <repository>
-        <id>conjars</id>
-        <name>Concurrent Conjars repository</name>
-        <url>http://conjars.org/repo</url>
+            <id>releases-internal</id>
+            <url>http://touchtype.artifactoryonline.com/touchtype/releases-internal
+            </url>
         </repository>
+        <snapshotRepository>
+            <id>snapshots-internal</id>
+            <url>http://touchtype.artifactoryonline.com/touchtype/snapshots-internal
+            </url>
+        </snapshotRepository>
     </distributionManagement>
 
     <dependencies>
