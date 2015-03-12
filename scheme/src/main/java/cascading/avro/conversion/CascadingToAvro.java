@@ -36,16 +36,6 @@ public class CascadingToAvro extends AvroConverterBase<TupleEntry, IndexedRecord
             .putAll(Schema.Type.NULL, Void.class)
             .build();
 
-    protected ImmutableSetMultimap<Schema.Type, Class<?>> avroTypeMultimap;
-
-    public CascadingToAvro() {
-        this(DEFAULT_AVRO_TYPE_MULTIMAP);
-    }
-
-    public CascadingToAvro(ImmutableSetMultimap<Schema.Type, Class<?>> avroTypeMultimap) {
-        this.avroTypeMultimap = avroTypeMultimap;
-    }
-
     @Override
     public IndexedRecord convertRecord(TupleEntry tupleEntry, Schema schema, int toDepth) {
         return convertRecord(tupleEntry.getTuple(), schema, toDepth);
@@ -182,7 +172,7 @@ public class CascadingToAvro extends AvroConverterBase<TupleEntry, IndexedRecord
     }
 
     public boolean isMappable(Class<?> c, Schema.Type t) {
-        for (Class<?> superClass : avroTypeMultimap.get(t)) {
+        for (Class<?> superClass : DEFAULT_AVRO_TYPE_MULTIMAP.get(t)) {
             if (superClass.isAssignableFrom(c)) return true;
         }
         try {
@@ -216,14 +206,5 @@ public class CascadingToAvro extends AvroConverterBase<TupleEntry, IndexedRecord
             map.put(tuple.getObject(i), depth != 0 && value instanceof Tuple ? asMap((Tuple) value, depth - 1) : value);
         }
         return map;
-    }
-
-    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-        out.writeObject(this.avroTypeMultimap);
-    }
-
-    @SuppressWarnings({"unchecked"})
-    private void readObject(java.io.ObjectInputStream in) throws Exception {
-        this.avroTypeMultimap = (ImmutableSetMultimap<Schema.Type, Class<?>>) in.readObject();
     }
 }

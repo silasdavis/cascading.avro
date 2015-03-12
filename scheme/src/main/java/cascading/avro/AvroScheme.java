@@ -54,13 +54,15 @@ import org.apache.hadoop.mapred.RecordReader;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
 
-public class AvroScheme extends Scheme<JobConf, RecordReader, OutputCollector, Object[], Object[]> {
+public class AvroScheme extends Scheme<JobConf, RecordReader, OutputCollector, Object[], Object[]>
+    implements Serializable {
     protected Schema schema;
     protected int recordUnpackDepth;
     protected AvroConverter<IndexedRecord, TupleEntry> avroToCascading;
